@@ -48,10 +48,6 @@ func (app *application) getToken(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(token.AccessToken))
 }
 
-func (app *application) authCallback(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Not implemented"))
-}
-
 func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Not implemented"))
 }
