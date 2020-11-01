@@ -1,12 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-
-	"stubblefield.io/wow-leaderboard-api/structs"
 )
 
 func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
@@ -35,12 +32,6 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 	}
 
-	leaderboard := structs.Leaderboard{}
-	err = json.Unmarshal(body, &leaderboard)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	w.Write([]byte(leaderboard.Entries[0].Character.Name))
+	w.Header().Add("Content-Type", "application/json")
+	w.Write(body)
 }
