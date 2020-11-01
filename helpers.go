@@ -2,13 +2,22 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"runtime/debug"
 	"strings"
 
 	"stubblefield.io/wow-leaderboard-api/structs"
 )
+
+func (app *application) serverError(w http.ResponseWriter, err error) {
+	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())
+	app.errorLog.Output(2, trace)
+
+	http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+}
 
 func (app *application) getToken() structs.AuthToken {
 	data := url.Values{}
