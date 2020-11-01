@@ -9,7 +9,7 @@ import (
 func (app *application) routes() http.Handler {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/token", app.getToken)
+	r.HandleFunc("/leaderboard", app.getLeaderboard)
 
 	return r
 }
