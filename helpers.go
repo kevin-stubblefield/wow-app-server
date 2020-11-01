@@ -9,6 +9,7 @@ import (
 	"runtime/debug"
 	"strings"
 
+	"github.com/patrickmn/go-cache"
 	"stubblefield.io/wow-leaderboard-api/structs"
 )
 
@@ -23,7 +24,12 @@ func (app *application) clientError(w http.ResponseWriter, status int) {
 	http.Error(w, http.StatusText(status), status)
 }
 
-func (app *application) getJSONResponse(req *http.Request) ([]byte, error) {
+func (app *application) getJSONResponse(req *http.Request, endpoint string) ([]byte, error) {
+	cacheValue, found := app.cache.Get(endpoint)
+	if found {
+		return cacheValue.([]byte), nil
+	}
+
 	resp, err := app.client.Do(req)
 	if err != nil {
 		return nil, err
@@ -33,6 +39,8 @@ func (app *application) getJSONResponse(req *http.Request) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	app.cache.Set(endpoint, body, cache.DefaultExpiration)
 
 	return body, nil
 }

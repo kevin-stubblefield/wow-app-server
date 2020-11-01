@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/patrickmn/go-cache"
 )
 
 type config struct {
@@ -18,6 +20,7 @@ type application struct {
 	infoLog  *log.Logger
 	errorLog *log.Logger
 	client   *http.Client
+	cache    cache.Cache
 }
 
 func main() {
@@ -36,11 +39,14 @@ func main() {
 
 	client := &http.Client{Timeout: 10 * time.Second}
 
+	c := cache.New(24*7*time.Hour, 24*8*time.Hour)
+
 	app := &application{
 		config:   *cfg,
 		infoLog:  infoLog,
 		errorLog: errorLog,
 		client:   client,
+		cache:    *c,
 	}
 
 	srv := &http.Server{
