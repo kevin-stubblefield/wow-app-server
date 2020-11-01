@@ -45,13 +45,13 @@ func (app *application) getJSONResponse(req *http.Request, endpoint string) ([]b
 	return body, nil
 }
 
-func (app *application) getToken() structs.AuthToken {
+func (app *application) getToken() (*structs.AuthToken, error) {
 	data := url.Values{}
 	data.Set("grant_type", "client_credentials")
 
 	req, err := http.NewRequest(http.MethodPost, "https://us.battle.net/oauth/token", strings.NewReader(data.Encode()))
 	if err != nil {
-		app.errorLog.Println("Unable to create token request", err)
+		return nil, err
 	}
 
 	req.SetBasicAuth(app.blizzardClientId, app.blizzardClientSecret)
@@ -59,21 +59,50 @@ func (app *application) getToken() structs.AuthToken {
 
 	resp, err := app.client.Do(req)
 	if err != nil {
-		app.errorLog.Println("Token request failed", err)
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		app.errorLog.Println("Failed reading token body", err)
+		return nil, err
 	}
 
-	token := structs.AuthToken{}
+	token := &structs.AuthToken{}
 
 	err = json.Unmarshal(body, &token)
 	if err != nil {
-		app.errorLog.Println("Failed parsing token body", err)
+		return nil, err
 	}
 
-	return token
+	return token, nil
+}
+
+func (app *application) getCurrentPvPSeason(token string) (*structs.SeasonIndex, error) {
+	endpoint := fmt.Sprintf("data/wow/pvp-season/index?namespace=dynamic-us&locale=en_US&access_token=%s", token)
+
+	req, err := http.NewRequest(http.MethodGet, app.wowApiUrl+endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := app.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	pvpSeason := &structs.SeasonIndex{}
+
+	err = json.Unmarshal(body, &pvpSeason)
+	if err != nil {
+		return nil, err
+	}
+
+	return pvpSeason, nil
 }

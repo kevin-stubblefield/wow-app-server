@@ -17,10 +17,11 @@ type config struct {
 
 type application struct {
 	config
-	infoLog  *log.Logger
-	errorLog *log.Logger
-	client   *http.Client
-	cache    cache.Cache
+	infoLog   *log.Logger
+	errorLog  *log.Logger
+	client    *http.Client
+	cache     cache.Cache
+	wowApiUrl string
 }
 
 func main() {
@@ -42,11 +43,12 @@ func main() {
 	c := cache.New(24*7*time.Hour, 24*8*time.Hour)
 
 	app := &application{
-		config:   *cfg,
-		infoLog:  infoLog,
-		errorLog: errorLog,
-		client:   client,
-		cache:    *c,
+		config:    *cfg,
+		infoLog:   infoLog,
+		errorLog:  errorLog,
+		client:    client,
+		cache:     *c,
+		wowApiUrl: "https://us.api.blizzard.com/",
 	}
 
 	srv := &http.Server{
