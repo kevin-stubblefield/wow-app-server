@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -20,16 +19,10 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := app.client.Do(req)
+	body, err := app.getJSONResponse(req)
 	if err != nil {
 		app.serverError(w, err)
 		return
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		app.serverError(w, err)
 	}
 
 	w.Header().Add("Content-Type", "application/json")

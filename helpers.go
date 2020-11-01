@@ -23,6 +23,20 @@ func (app *application) clientError(w http.ResponseWriter, status int) {
 	http.Error(w, http.StatusText(status), status)
 }
 
+func (app *application) getJSONResponse(req *http.Request) ([]byte, error) {
+	resp, err := app.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
+}
+
 func (app *application) getToken() structs.AuthToken {
 	data := url.Values{}
 	data.Set("grant_type", "client_credentials")
