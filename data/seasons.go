@@ -1,4 +1,4 @@
-package structs
+package data
 
 type SeasonIndex struct {
 	CurrentSeason struct {

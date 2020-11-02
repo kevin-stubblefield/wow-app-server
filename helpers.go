@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/patrickmn/go-cache"
-	"stubblefield.io/wow-leaderboard-api/structs"
+	"stubblefield.io/wow-leaderboard-api/data"
 )
 
 func (app *application) serverError(w http.ResponseWriter, err error) {
@@ -45,11 +45,11 @@ func (app *application) getJSONResponse(req *http.Request, endpoint string) ([]b
 	return body, nil
 }
 
-func (app *application) getToken() (*structs.AuthToken, error) {
-	data := url.Values{}
-	data.Set("grant_type", "client_credentials")
+func (app *application) getToken() (*data.AuthToken, error) {
+	reqBody := url.Values{}
+	reqBody.Set("grant_type", "client_credentials")
 
-	req, err := http.NewRequest(http.MethodPost, "https://us.battle.net/oauth/token", strings.NewReader(data.Encode()))
+	req, err := http.NewRequest(http.MethodPost, "https://us.battle.net/oauth/token", strings.NewReader(reqBody.Encode()))
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (app *application) getToken() (*structs.AuthToken, error) {
 		return nil, err
 	}
 
-	token := &structs.AuthToken{}
+	token := &data.AuthToken{}
 
 	err = json.Unmarshal(body, &token)
 	if err != nil {
@@ -78,7 +78,7 @@ func (app *application) getToken() (*structs.AuthToken, error) {
 	return token, nil
 }
 
-func (app *application) getCurrentPvPSeason(token string) (*structs.SeasonIndex, error) {
+func (app *application) getCurrentPvPSeason(token string) (*data.SeasonIndex, error) {
 	endpoint := fmt.Sprintf("data/wow/pvp-season/index?namespace=dynamic-us&locale=en_US&access_token=%s", token)
 
 	req, err := http.NewRequest(http.MethodGet, app.wowApiUrl+endpoint, nil)
@@ -91,7 +91,7 @@ func (app *application) getCurrentPvPSeason(token string) (*structs.SeasonIndex,
 		return nil, err
 	}
 
-	pvpSeason := &structs.SeasonIndex{}
+	pvpSeason := &data.SeasonIndex{}
 
 	err = json.Unmarshal(body, &pvpSeason)
 	if err != nil {

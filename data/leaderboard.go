@@ -1,4 +1,4 @@
-package structs
+package data
 
 type Leaderboard struct {
 	Entries []struct {
