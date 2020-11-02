@@ -3,12 +3,23 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
 
 func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 	pvpBracket := mux.Vars(r)["bracket"]
+
+	offset, err := strconv.Atoi(r.URL.Query().Get("offset"))
+	if err != nil || offset < 0 {
+		offset = 0
+	}
+
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil || limit < 25 {
+		limit = 10
+	}
 
 	token, err := app.client.getToken()
 	if err != nil {
@@ -28,8 +39,10 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	results := leaderboard.Entries[offset : offset+limit]
+
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(leaderboard)
+	json.NewEncoder(w).Encode(results)
 }
 
 func (app *application) getCharacterEquipment(w http.ResponseWriter, r *http.Request) {
