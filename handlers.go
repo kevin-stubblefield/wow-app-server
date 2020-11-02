@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -22,22 +22,14 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	endpoint := fmt.Sprintf("data/wow/pvp-season/%d/pvp-leaderboard/%s?namespace=dynamic-us&locale=en_US&access_token=%s", pvpSeason.CurrentSeason.Id, pvpBracket, token.AccessToken)
-
-	req, err := http.NewRequest(http.MethodGet, app.client.wowApiUrl+endpoint, nil)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	body, err := app.client.getJSONResponse(req, endpoint, true)
+	leaderboard, err := app.client.getLeaderboardData(pvpSeason.CurrentSeason.Id, pvpBracket, token.AccessToken)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
-	w.Write(body)
+	json.NewEncoder(w).Encode(leaderboard)
 }
 
 func (app *application) getCharacterEquipment(w http.ResponseWriter, r *http.Request) {
@@ -51,20 +43,33 @@ func (app *application) getCharacterEquipment(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	endpoint := fmt.Sprintf("profile/wow/character/%s/%s/equipment?namespace=profile-us&locale=en_US&access_token=%s", realmSlug, character, token.AccessToken)
-
-	req, err := http.NewRequest(http.MethodGet, app.client.wowApiUrl+endpoint, nil)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	body, err := app.client.getJSONResponse(req, endpoint, true)
+	equipment, err := app.client.getEquipmentData(realmSlug, character, token.AccessToken)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
-	w.Write(body)
+	json.NewEncoder(w).Encode(equipment)
+}
+
+func (app *application) getCharacter(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	realmSlug := vars["realmSlug"]
+	character := vars["character"]
+
+	token, err := app.client.getToken()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	summary, err := app.client.getCharacterSummary(realmSlug, character, token.AccessToken)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(summary)
 }

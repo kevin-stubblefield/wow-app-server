@@ -93,3 +93,72 @@ func (client *BlizzardClient) getCurrentPvPSeason(token string) (*data.SeasonInd
 
 	return pvpSeason, nil
 }
+
+func (client *BlizzardClient) getLeaderboardData(pvpSeason int, pvpBracket, token string) (*data.Leaderboard, error) {
+	endpoint := fmt.Sprintf("data/wow/pvp-season/%d/pvp-leaderboard/%s?namespace=dynamic-us&locale=en_US&access_token=%s", pvpSeason, pvpBracket, token)
+
+	req, err := http.NewRequest(http.MethodGet, client.wowApiUrl+endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := client.getJSONResponse(req, endpoint, true)
+	if err != nil {
+		return nil, err
+	}
+
+	leaderboard := &data.Leaderboard{}
+
+	err = json.Unmarshal(body, &leaderboard)
+	if err != nil {
+		return nil, err
+	}
+
+	return leaderboard, nil
+}
+
+func (client *BlizzardClient) getEquipmentData(realmSlug, character, token string) (*data.Equipment, error) {
+	endpoint := fmt.Sprintf("profile/wow/character/%s/%s/equipment?namespace=profile-us&locale=en_US&access_token=%s", realmSlug, character, token)
+
+	req, err := http.NewRequest(http.MethodGet, client.wowApiUrl+endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := client.getJSONResponse(req, endpoint, true)
+	if err != nil {
+		return nil, err
+	}
+
+	equipment := &data.Equipment{}
+
+	err = json.Unmarshal(body, &equipment)
+	if err != nil {
+		return nil, err
+	}
+
+	return equipment, nil
+}
+
+func (client *BlizzardClient) getCharacterSummary(realmSlug, character, token string) (*data.CharacterSummary, error) {
+	endpoint := fmt.Sprintf("profile/wow/character/%s/%s?namespace=profile-us&locale=en_US&access_token=%s", realmSlug, character, token)
+
+	req, err := http.NewRequest(http.MethodGet, client.wowApiUrl+endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := client.getJSONResponse(req, endpoint, true)
+	if err != nil {
+		return nil, err
+	}
+
+	summary := &data.CharacterSummary{}
+
+	err = json.Unmarshal(body, &summary)
+	if err != nil {
+		return nil, err
+	}
+
+	return summary, nil
+}
