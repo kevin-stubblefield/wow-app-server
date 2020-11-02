@@ -30,7 +30,7 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, err := app.getJSONResponse(req, endpoint)
+	body, err := app.getJSONResponse(req, endpoint, true)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -59,7 +59,7 @@ func (app *application) getCharacterEquipment(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	body, err := app.getJSONResponse(req, endpoint)
+	body, err := app.getJSONResponse(req, endpoint, true)
 	if err != nil {
 		app.serverError(w, err)
 		return

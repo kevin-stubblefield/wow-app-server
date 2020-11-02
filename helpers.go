@@ -24,7 +24,7 @@ func (app *application) clientError(w http.ResponseWriter, status int) {
 	http.Error(w, http.StatusText(status), status)
 }
 
-func (app *application) getJSONResponse(req *http.Request, endpoint string) ([]byte, error) {
+func (app *application) getJSONResponse(req *http.Request, endpoint string, cacheRequest bool) ([]byte, error) {
 	cacheValue, found := app.cache.Get(endpoint)
 	if found {
 		return cacheValue.([]byte), nil
@@ -34,13 +34,16 @@ func (app *application) getJSONResponse(req *http.Request, endpoint string) ([]b
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	app.cache.Set(endpoint, body, cache.DefaultExpiration)
+	if cacheRequest {
+		app.cache.Set(endpoint, body, cache.DefaultExpiration)
+	}
 
 	return body, nil
 }
@@ -57,13 +60,7 @@ func (app *application) getToken() (*data.AuthToken, error) {
 	req.SetBasicAuth(app.blizzardClientId, app.blizzardClientSecret)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, err := app.client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := app.getJSONResponse(req, "oauth/token", false)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +83,7 @@ func (app *application) getCurrentPvPSeason(token string) (*data.SeasonIndex, er
 		return nil, err
 	}
 
-	body, err := app.getJSONResponse(req, endpoint)
+	body, err := app.getJSONResponse(req, endpoint, true)
 	if err != nil {
 		return nil, err
 	}
