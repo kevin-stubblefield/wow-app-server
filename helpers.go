@@ -86,13 +86,7 @@ func (app *application) getCurrentPvPSeason(token string) (*structs.SeasonIndex,
 		return nil, err
 	}
 
-	resp, err := app.client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := app.getJSONResponse(req, endpoint)
 	if err != nil {
 		return nil, err
 	}

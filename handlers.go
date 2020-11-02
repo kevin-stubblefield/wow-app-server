@@ -18,8 +18,6 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.infoLog.Printf("%+v", pvpSeason)
-
 	pvpLeaderboard := "3v3"
 
 	endpoint := fmt.Sprintf("data/wow/pvp-season/%d/pvp-leaderboard/%s?namespace=dynamic-us&locale=en_US&access_token=%s", pvpSeason.CurrentSeason.Id, pvpLeaderboard, token.AccessToken)
