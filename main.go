@@ -26,8 +26,8 @@ type application struct {
 
 func main() {
 	addr := flag.String("addr", ":3000", "Http network address")
-	blizzardClientId := flag.String("blizClientId", "9539f43fe1784bef9ff62aee95727bb6", "Client ID for Blizzard API access")
-	blizzardClientSecret := flag.String("blizClientSecret", "66HF224N67cAaDfkCqqCH2DtmFm5xzNT", "Client secret for Blizzard API access")
+	blizzardClientId := flag.String("blizClientId", "", "Client ID for Blizzard API access")
+	blizzardClientSecret := flag.String("blizClientSecret", "", "Client secret for Blizzard API access")
 	flag.Parse()
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -60,6 +60,6 @@ func main() {
 	}
 
 	infoLog.Printf("Starting server on port %s", *addr)
-	err := srv.ListenAndServe()
+	err := srv.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
 	errorLog.Fatal(err)
 }
