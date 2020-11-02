@@ -9,7 +9,7 @@ import (
 func (app *application) routes() http.Handler {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/leaderboard", app.getLeaderboard)
+	r.HandleFunc("/leaderboard/{bracket:(?:2v2|3v3|rbg)}", app.getLeaderboard)
 
 	return r
 }

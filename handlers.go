@@ -3,9 +3,13 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
+	pvpBracket := mux.Vars(r)["bracket"]
+
 	token, err := app.getToken()
 	if err != nil {
 		app.serverError(w, err)
@@ -18,9 +22,7 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pvpLeaderboard := "3v3"
-
-	endpoint := fmt.Sprintf("data/wow/pvp-season/%d/pvp-leaderboard/%s?namespace=dynamic-us&locale=en_US&access_token=%s", pvpSeason.CurrentSeason.Id, pvpLeaderboard, token.AccessToken)
+	endpoint := fmt.Sprintf("data/wow/pvp-season/%d/pvp-leaderboard/%s?namespace=dynamic-us&locale=en_US&access_token=%s", pvpSeason.CurrentSeason.Id, pvpBracket, token.AccessToken)
 
 	req, err := http.NewRequest(http.MethodGet, app.wowApiUrl+endpoint, nil)
 	if err != nil {
