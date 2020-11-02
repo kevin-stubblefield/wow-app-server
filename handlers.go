@@ -39,3 +39,32 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.Write(body)
 }
+
+func (app *application) getCharacterEquipment(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	realmSlug := vars["realmSlug"]
+	character := vars["character"]
+
+	token, err := app.getToken()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	endpoint := fmt.Sprintf("profile/wow/character/%s/%s/equipment?namespace=profile-us&locale=en_US&access_token=%s", realmSlug, character, token.AccessToken)
+
+	req, err := http.NewRequest(http.MethodGet, app.wowApiUrl+endpoint, nil)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	body, err := app.getJSONResponse(req, endpoint)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.Write(body)
+}
