@@ -16,12 +16,9 @@ type config struct {
 }
 
 type application struct {
-	config
-	infoLog   *log.Logger
-	errorLog  *log.Logger
-	client    *http.Client
-	cache     cache.Cache
-	wowApiUrl string
+	infoLog  *log.Logger
+	errorLog *log.Logger
+	client   *BlizzardClient
 }
 
 func main() {
@@ -33,22 +30,21 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	cfg := &config{
+	c := cache.New(24*7*time.Hour, 24*8*time.Hour)
+
+	client := &BlizzardClient{
+		cache:                *c,
+		wowApiUrl:            "https://us.api.blizzard.com/",
 		blizzardClientId:     *blizzardClientId,
 		blizzardClientSecret: *blizzardClientSecret,
 	}
 
-	client := &http.Client{Timeout: 10 * time.Second}
-
-	c := cache.New(24*7*time.Hour, 24*8*time.Hour)
+	client.Timeout = 10 * time.Second
 
 	app := &application{
-		config:    *cfg,
-		infoLog:   infoLog,
-		errorLog:  errorLog,
-		client:    client,
-		cache:     *c,
-		wowApiUrl: "https://us.api.blizzard.com/",
+		infoLog:  infoLog,
+		errorLog: errorLog,
+		client:   client,
 	}
 
 	srv := &http.Server{

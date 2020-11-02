@@ -10,13 +10,13 @@ import (
 func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 	pvpBracket := mux.Vars(r)["bracket"]
 
-	token, err := app.getToken()
+	token, err := app.client.getToken()
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 
-	pvpSeason, err := app.getCurrentPvPSeason(token.AccessToken)
+	pvpSeason, err := app.client.getCurrentPvPSeason(token.AccessToken)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -24,13 +24,13 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 
 	endpoint := fmt.Sprintf("data/wow/pvp-season/%d/pvp-leaderboard/%s?namespace=dynamic-us&locale=en_US&access_token=%s", pvpSeason.CurrentSeason.Id, pvpBracket, token.AccessToken)
 
-	req, err := http.NewRequest(http.MethodGet, app.wowApiUrl+endpoint, nil)
+	req, err := http.NewRequest(http.MethodGet, app.client.wowApiUrl+endpoint, nil)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 
-	body, err := app.getJSONResponse(req, endpoint, true)
+	body, err := app.client.getJSONResponse(req, endpoint, true)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -45,7 +45,7 @@ func (app *application) getCharacterEquipment(w http.ResponseWriter, r *http.Req
 	realmSlug := vars["realmSlug"]
 	character := vars["character"]
 
-	token, err := app.getToken()
+	token, err := app.client.getToken()
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -53,13 +53,13 @@ func (app *application) getCharacterEquipment(w http.ResponseWriter, r *http.Req
 
 	endpoint := fmt.Sprintf("profile/wow/character/%s/%s/equipment?namespace=profile-us&locale=en_US&access_token=%s", realmSlug, character, token.AccessToken)
 
-	req, err := http.NewRequest(http.MethodGet, app.wowApiUrl+endpoint, nil)
+	req, err := http.NewRequest(http.MethodGet, app.client.wowApiUrl+endpoint, nil)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 
-	body, err := app.getJSONResponse(req, endpoint, true)
+	body, err := app.client.getJSONResponse(req, endpoint, true)
 	if err != nil {
 		app.serverError(w, err)
 		return
