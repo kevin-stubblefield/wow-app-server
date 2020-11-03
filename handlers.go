@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/gorilla/mux"
+	"stubblefield.io/wow-leaderboard-api/data"
 )
 
 func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
@@ -40,17 +41,19 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	results := leaderboard.Entries[offset : offset+limit]
+	result := &data.Leaderboard{}
+
+	result.Entries = append(result.Entries, leaderboard.Entries[offset:offset+limit]...)
 
 	var wg sync.WaitGroup
-	wg.Add(len(results))
+	wg.Add(len(result.Entries))
 
-	for i, entry := range results {
+	for i, entry := range result.Entries {
 		realmSlug := entry.Character.Realm.Slug
 		character := entry.Character.Name
 		go func(i int) {
 			defer wg.Done()
-			results[i].Character.Summary, err = app.client.getCharacterSummary(realmSlug, character, token.AccessToken)
+			result.Entries[i].Character.Summary, err = app.client.getCharacterSummary(realmSlug, character, token.AccessToken)
 			if err != nil {
 				app.serverError(w, err)
 				return
@@ -61,8 +64,12 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 	wg.Wait()
 
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(results)
+	json.NewEncoder(w).Encode(result)
 }
+
+// func include(entry *data.LeaderboardEntry, filters url.Values) bool {
+
+// }
 
 func (app *application) getCharacterEquipment(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
