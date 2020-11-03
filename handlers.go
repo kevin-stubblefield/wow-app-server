@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"net/url"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/gorilla/mux"
@@ -67,9 +69,32 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
-// func include(entry *data.LeaderboardEntry, filters url.Values) bool {
+func include(entry data.LeaderboardEntry, filters url.Values) bool {
+	specs := filters["spec"]
+	classes := filters["class"]
+	included := false
 
-// }
+	if len(classes) > 0 {
+		if contains(classes, strings.ToLower(entry.Character.Summary.Class.Name)) {
+			included = true
+		}
+
+		if contains(specs, strings.ToLower(entry.Character.Summary.Spec.Name)) {
+			included = true
+		}
+	}
+
+	return included
+}
+
+func contains(strings []string, value string) bool {
+	for _, s := range strings {
+		if s == value {
+			return true
+		}
+	}
+	return false
+}
 
 func (app *application) getCharacterEquipment(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
