@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"sync"
 
 	"github.com/gorilla/mux"
 )
@@ -40,6 +41,24 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	results := leaderboard.Entries[offset : offset+limit]
+
+	var wg sync.WaitGroup
+	wg.Add(len(results))
+
+	for i, entry := range results {
+		realmSlug := entry.Character.Realm.Slug
+		character := entry.Character.Name
+		go func(i int) {
+			defer wg.Done()
+			results[i].Character.Summary, err = app.client.getCharacterSummary(realmSlug, character, token.AccessToken)
+			if err != nil {
+				app.serverError(w, err)
+				return
+			}
+		}(i)
+	}
+
+	wg.Wait()
 
 	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(results)

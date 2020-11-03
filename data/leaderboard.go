@@ -9,6 +9,7 @@ type Leaderboard struct {
 				Slug string `json:"slug"`
 				Id   int    `json:"id"`
 			} `json:"realm"`
+			Summary *CharacterSummary `json:"summary"`
 		} `json:"character"`
 		Rank                  int `json:"rank"`
 		Rating                int `json:"rating"`

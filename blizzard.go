@@ -153,6 +153,8 @@ func (client *BlizzardClient) getEquipmentData(realmSlug, character, token strin
 }
 
 func (client *BlizzardClient) getCharacterSummary(realmSlug, character, token string) (*data.CharacterSummary, error) {
+	realmSlug = strings.ToLower(realmSlug)
+	character = strings.ToLower(character)
 	endpoint := fmt.Sprintf("profile/wow/character/%s/%s?namespace=profile-us&locale=en_US&access_token=%s", realmSlug, character, token)
 
 	cacheValue, found := client.cache.Get(endpoint)
