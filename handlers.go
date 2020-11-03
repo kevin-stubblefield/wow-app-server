@@ -12,6 +12,19 @@ import (
 	"stubblefield.io/wow-leaderboard-api/data"
 )
 
+func (app *application) getLeaderboardByBracket(w http.ResponseWriter, r *http.Request) {
+	pvpBracket := mux.Vars(r)["bracket"]
+
+	leaderboard, err := app.leaderboard.FetchAllByBracket(pvpBracket)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(leaderboard)
+}
+
 func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 	pvpBracket := mux.Vars(r)["bracket"]
 
