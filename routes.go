@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+
+	gohandlers "github.com/gorilla/handlers"
 )
 
 func (app *application) routes() http.Handler {
@@ -14,5 +16,7 @@ func (app *application) routes() http.Handler {
 	s.HandleFunc("/equipment/{realmSlug:[a-z-]+}/{character:[a-z]+}", app.getCharacterEquipment)
 	s.HandleFunc("/character/{realmSlug:[a-z-]+}/{character:[a-z]+}", app.getCharacter)
 
-	return r
+	ch := gohandlers.CORS(gohandlers.AllowedOrigins([]string{"*"}))
+
+	return ch(r)
 }
