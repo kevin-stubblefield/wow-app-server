@@ -15,7 +15,7 @@ import (
 func (app *application) getLeaderboardByBracket(w http.ResponseWriter, r *http.Request) {
 	pvpBracket := mux.Vars(r)["bracket"]
 
-	leaderboard, err := app.leaderboard.FetchAllByBracket(pvpBracket)
+	leaderboard, err := app.leaderboard.FetchAllByBracket(pvpBracket, "", "")
 	if err != nil {
 		app.serverError(w, err)
 		return
