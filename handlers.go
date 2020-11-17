@@ -15,7 +15,21 @@ import (
 func (app *application) getLeaderboardByBracket(w http.ResponseWriter, r *http.Request) {
 	pvpBracket := mux.Vars(r)["bracket"]
 
-	leaderboard, err := app.leaderboard.FetchAllByBracket(pvpBracket, "", "")
+	filters := r.URL.Query()
+	classes := filters["class"]
+	specs := filters["spec"]
+
+	limit, err := strconv.Atoi(filters.Get("limit"))
+	if err != nil || limit < 25 {
+		limit = 25
+	}
+
+	offset, err := strconv.Atoi(filters.Get("offset"))
+	if err != nil || offset < 0 {
+		offset = 0
+	}
+
+	leaderboard, err := app.leaderboard.FetchAllByBracket(pvpBracket, classes, specs, limit, offset)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -23,6 +37,17 @@ func (app *application) getLeaderboardByBracket(w http.ResponseWriter, r *http.R
 
 	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(leaderboard)
+}
+
+func (app *application) getSpecs(w http.ResponseWriter, r *http.Request) {
+	specs, err := app.specs.FetchSpecs()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(specs)
 }
 
 func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {

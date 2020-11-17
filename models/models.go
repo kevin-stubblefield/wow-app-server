@@ -1,13 +1,14 @@
 package models
 
+// LeaderboardEntry holds data for each entry in the leaderboard table
 type LeaderboardEntry struct {
-	Id                 int    `json:"id"`
+	ID                 int    `json:"id"`
 	Rank               int    `json:"rank"`
 	Rating             int    `json:"rating"`
 	CharacterName      string `json:"name"`
-	CharacterId        int    `json:"character_id"`
+	CharacterID        int    `json:"character_id"`
 	CharacterRealmSlug string `json:"realm_slug"`
-	CharacterRealmId   int    `json:"realm_id"`
+	CharacterRealmID   int    `json:"realm_id"`
 	CharacterFaction   string `json:"faction"`
 	CharacterRace      string `json:"race"`
 	CharacterClass     string `json:"class"`
@@ -16,4 +17,14 @@ type LeaderboardEntry struct {
 	GamesWon           int    `json:"won"`
 	GamesLost          int    `json:"lost"`
 	Bracket            string `json:"bracket"`
+}
+
+// Specialization holds data for each entry in the specialization table
+type Specialization struct {
+	ID        int    `json:"id"`
+	Class     string `json:"class"`
+	ClassSlug string `json:"class_slug"`
+	Spec      string `json:"spec"`
+	SpecSlug  string `json:"spec_slug"`
+	SpecRole  string `json:"spec_role"`
 }
