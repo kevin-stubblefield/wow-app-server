@@ -22,9 +22,10 @@ type LeaderboardEntry struct {
 
 // Character holds data for each entry in the character table
 type Character struct {
-	Name      string `json:"name"`
-	Realm     string `json:"realm"`
-	RealmSlug string `json:"realm_slug"`
+	Name      string      `json:"name"`
+	Realm     string      `json:"realm"`
+	RealmSlug string      `json:"realm_slug"`
+	Equipped  []Equipment `json:"equipped"`
 }
 
 // Specialization holds data for each entry in the specialization table
@@ -35,4 +36,14 @@ type Specialization struct {
 	Spec      string `json:"spec"`
 	SpecSlug  string `json:"spec_slug"`
 	SpecRole  string `json:"spec_role"`
+}
+
+// Equipment holds data for each piece of equipment in the equipment table
+type Equipment struct {
+	ID                 int    `json:"-"`
+	CharacterRealmSlug string `json:"-"`
+	CharacterName      string `json:"-"`
+	ItemID             int    `json:"id"`
+	ItemSlot           string `json:"slot"`
+	ItemName           string `json:"name"`
 }

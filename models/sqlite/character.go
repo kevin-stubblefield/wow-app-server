@@ -20,6 +20,18 @@ func (store *CharacterStore) Fetch(realmSlug, characterName string) (*models.Cha
 		return nil, err
 	}
 
+	rows, err := store.DB.Query("SELECT * FROM equipment WHERE character_realm_slug = ? AND character_name = ?", realmSlug, characterName)
+	if err != nil {
+		return nil, err
+	}
+
+	equipment, err := populateEquipment(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	character.Equipped = equipment
+
 	return character, nil
 }
 
@@ -36,4 +48,28 @@ func populateCharacter(row *sql.Row) (*models.Character, error) {
 	}
 
 	return &c, nil
+}
+
+func populateEquipment(rows *sql.Rows) ([]models.Equipment, error) {
+	var equipped []models.Equipment
+
+	for rows.Next() {
+		var e models.Equipment
+
+		err := rows.Scan(
+			&e.ID,
+			&e.CharacterRealmSlug,
+			&e.CharacterName,
+			&e.ItemID,
+			&e.ItemSlot,
+			&e.ItemName,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		equipped = append(equipped, e)
+	}
+
+	return equipped, nil
 }
