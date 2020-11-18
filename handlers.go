@@ -39,6 +39,20 @@ func (app *application) getLeaderboardByBracket(w http.ResponseWriter, r *http.R
 	json.NewEncoder(w).Encode(leaderboard)
 }
 
+func (app *application) getCharacter(w http.ResponseWriter, r *http.Request) {
+	realmSlug := mux.Vars(r)["realmSlug"]
+	characterName := mux.Vars(r)["character"]
+
+	character, err := app.character.Fetch(realmSlug, characterName)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(character)
+}
+
 func (app *application) getSpecs(w http.ResponseWriter, r *http.Request) {
 	specs, err := app.specs.FetchSpecs()
 	if err != nil {
@@ -134,7 +148,7 @@ func contains(strings []string, value string) bool {
 	return false
 }
 
-func (app *application) getCharacterEquipment(w http.ResponseWriter, r *http.Request) {
+func (app *application) getCharacterEquipmentFromBlizzard(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	realmSlug := vars["realmSlug"]
 	character := vars["character"]
@@ -155,7 +169,7 @@ func (app *application) getCharacterEquipment(w http.ResponseWriter, r *http.Req
 	json.NewEncoder(w).Encode(equipment)
 }
 
-func (app *application) getCharacter(w http.ResponseWriter, r *http.Request) {
+func (app *application) getCharacterFromBlizzard(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	realmSlug := vars["realmSlug"]
 	character := vars["character"]

@@ -83,6 +83,7 @@ func populatePvpLeaderboard(rows *sql.Rows) ([]models.LeaderboardEntry, error) {
 			&e.Rating,
 			&e.CharacterName,
 			&e.CharacterID,
+			&e.CharacterRealm,
 			&e.CharacterRealmSlug,
 			&e.CharacterRealmID,
 			&e.CharacterFaction,

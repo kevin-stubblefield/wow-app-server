@@ -7,6 +7,7 @@ type LeaderboardEntry struct {
 	Rating             int    `json:"rating"`
 	CharacterName      string `json:"name"`
 	CharacterID        int    `json:"character_id"`
+	CharacterRealm     string `json:"realm"`
 	CharacterRealmSlug string `json:"realm_slug"`
 	CharacterRealmID   int    `json:"realm_id"`
 	CharacterFaction   string `json:"faction"`
@@ -17,6 +18,13 @@ type LeaderboardEntry struct {
 	GamesWon           int    `json:"won"`
 	GamesLost          int    `json:"lost"`
 	Bracket            string `json:"bracket"`
+}
+
+// Character holds data for each entry in the character table
+type Character struct {
+	Name      string `json:"name"`
+	Realm     string `json:"realm"`
+	RealmSlug string `json:"realm_slug"`
 }
 
 // Specialization holds data for each entry in the specialization table

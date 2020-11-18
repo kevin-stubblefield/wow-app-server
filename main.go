@@ -22,6 +22,7 @@ type application struct {
 	errorLog    *log.Logger
 	leaderboard sqlite.PvpLeaderboardStore
 	specs       sqlite.SpecializationStore
+	character   sqlite.CharacterStore
 	client      *BlizzardClient
 }
 
@@ -54,6 +55,7 @@ func main() {
 		errorLog:    errorLog,
 		leaderboard: sqlite.PvpLeaderboardStore{DB: db},
 		specs:       sqlite.SpecializationStore{DB: db},
+		character:   sqlite.CharacterStore{DB: db},
 		client:      client,
 	}
 
