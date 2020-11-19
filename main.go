@@ -43,9 +43,9 @@ func main() {
 	defer db.Close()
 
 	client := &BlizzardClient{
-		wowApiUrl:            "https://us.api.blizzard.com/",
-		blizzardClientId:     *blizzardClientID,
-		blizzardClientSecret: *blizzardClientSecret,
+		BaseURL:              "https://us.api.blizzard.com/",
+		BlizzardClientID:     *blizzardClientID,
+		BlizzardClientSecret: *blizzardClientSecret,
 	}
 
 	client.Timeout = 10 * time.Second

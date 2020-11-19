@@ -77,19 +77,19 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 		limit = 10
 	}
 
-	token, err := app.client.getToken()
+	token, err := app.client.GetToken()
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 
-	pvpSeason, err := app.client.getCurrentPvPSeason(token.AccessToken)
+	pvpSeason, err := app.client.GetCurrentPvPSeason(token.AccessToken)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 
-	leaderboard, err := app.client.getLeaderboardData(pvpSeason.CurrentSeason.Id, pvpBracket, token.AccessToken)
+	leaderboard, err := app.client.GetLeaderboardData(pvpSeason.CurrentSeason.ID, pvpBracket, token.AccessToken)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -107,11 +107,12 @@ func (app *application) getLeaderboard(w http.ResponseWriter, r *http.Request) {
 		character := entry.Character.Name
 		go func(i int) {
 			defer wg.Done()
-			result.Entries[i].Character.Summary, err = app.client.getCharacterSummary(realmSlug, character, token.AccessToken)
+			summary, err := app.client.GetCharacterSummary(realmSlug, character, token.AccessToken)
 			if err != nil {
 				app.serverError(w, err)
 				return
 			}
+			result.Entries[i].Character.Summary = *summary
 		}(i)
 	}
 
@@ -153,13 +154,13 @@ func (app *application) getCharacterEquipmentFromBlizzard(w http.ResponseWriter,
 	realmSlug := vars["realmSlug"]
 	character := vars["character"]
 
-	token, err := app.client.getToken()
+	token, err := app.client.GetToken()
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 
-	equipment, err := app.client.getEquipmentData(realmSlug, character, token.AccessToken)
+	equipment, err := app.client.GetCharacterEquipment(realmSlug, character, token.AccessToken)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -174,13 +175,13 @@ func (app *application) getCharacterFromBlizzard(w http.ResponseWriter, r *http.
 	realmSlug := vars["realmSlug"]
 	character := vars["character"]
 
-	token, err := app.client.getToken()
+	token, err := app.client.GetToken()
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 
-	summary, err := app.client.getCharacterSummary(realmSlug, character, token.AccessToken)
+	summary, err := app.client.GetCharacterSummary(realmSlug, character, token.AccessToken)
 	if err != nil {
 		app.serverError(w, err)
 		return
