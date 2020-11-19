@@ -63,6 +63,7 @@ func populateEquipment(rows *sql.Rows) ([]models.Equipment, error) {
 			&e.ItemID,
 			&e.ItemSlot,
 			&e.ItemName,
+			&e.Bonuses,
 		)
 		if err != nil {
 			return nil, err

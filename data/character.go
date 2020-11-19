@@ -25,6 +25,7 @@ type Equipment struct {
 		Slot struct {
 			Name string `json:"name"`
 		} `json:"slot"`
-		Name string `json:"name"`
+		Bonuses []int  `json:"bonus_list"`
+		Name    string `json:"name"`
 	} `json:"equipped_items"`
 }

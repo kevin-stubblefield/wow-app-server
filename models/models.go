@@ -46,4 +46,5 @@ type Equipment struct {
 	ItemID             int    `json:"id"`
 	ItemSlot           string `json:"slot"`
 	ItemName           string `json:"name"`
+	Bonuses            string `json:"bonuses"`
 }
