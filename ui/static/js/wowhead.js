@@ -1,0 +1,1 @@
+const whTooltips = {colorLinks: true, iconizeLinks: true, iconSize: 'medium', renameLinks: false};

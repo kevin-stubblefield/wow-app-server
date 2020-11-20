@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -18,12 +19,13 @@ type config struct {
 }
 
 type application struct {
-	infoLog     *log.Logger
-	errorLog    *log.Logger
-	leaderboard sqlite.PvpLeaderboardStore
-	specs       sqlite.SpecializationStore
-	character   sqlite.CharacterStore
-	client      *BlizzardClient
+	infoLog       *log.Logger
+	errorLog      *log.Logger
+	leaderboard   sqlite.PvpLeaderboardStore
+	specs         sqlite.SpecializationStore
+	character     sqlite.CharacterStore
+	client        *BlizzardClient
+	templateCache map[string]*template.Template
 }
 
 func main() {
@@ -50,13 +52,19 @@ func main() {
 
 	client.Timeout = 10 * time.Second
 
+	templateCache, err := newTemplateCache("./ui/html/")
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
 	app := &application{
-		infoLog:     infoLog,
-		errorLog:    errorLog,
-		leaderboard: sqlite.PvpLeaderboardStore{DB: db},
-		specs:       sqlite.SpecializationStore{DB: db},
-		character:   sqlite.CharacterStore{DB: db},
-		client:      client,
+		infoLog:       infoLog,
+		errorLog:      errorLog,
+		leaderboard:   sqlite.PvpLeaderboardStore{DB: db},
+		specs:         sqlite.SpecializationStore{DB: db},
+		character:     sqlite.CharacterStore{DB: db},
+		client:        client,
+		templateCache: templateCache,
 	}
 
 	srv := &http.Server{

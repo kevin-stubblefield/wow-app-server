@@ -1,0 +1,38 @@
+{{template "base" .}}
+
+{{define "title"}}Leaderboard{{end}}
+
+{{define "main"}}
+	{{if .Leaderboard}}
+		<ul class="leaderboard">
+            <li class="entry header">
+                <div class="rank">Rank</div>
+                <div class="rating">Rating</div>
+                <div class="name">Name</div>
+                <div class="faction">Faction</div>
+                <div class="race">Race</div>
+                <!--<div class="class">Class</div>-->
+                <div class="spec">Spec</div>
+                <!--<div class="played">Played</div>-->
+                <div class="won">Won</div>
+                <div class="lost">Lost</div>
+            </li>
+			{{range .Leaderboard}}
+			<li class="entry">
+				<a href="/character/{{ .CharacterRealmSlug }}/{{ .CharacterName }}">
+					<div class="rank">{{ .Rank }}</div>
+					<div class="rating">{{ .Rating }}</div>
+					<div class="name">{{ .CharacterName }}</div>
+					<div class="faction">{{ .CharacterFaction }}</div>
+					<div class="race">{{ .CharacterRace }}</div>
+					<div class="spec">{{ .CharacterSpec }}</div>
+					<div class="won">{{ .GamesWon }}</div>
+					<div class="lost">{{ .GamesLost }}</div>
+				</a>
+			</li>
+			{{end}}
+        </ul>
+	{{else}}
+		<p>There's no data</p>
+	{{end}}
+{{end}}

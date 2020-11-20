@@ -12,6 +12,34 @@ import (
 	"stubblefield.io/wow-leaderboard-api/data"
 )
 
+func (app *application) showLeaderboard(w http.ResponseWriter, r *http.Request) {
+	pvpBracket := mux.Vars(r)["bracket"]
+
+	filters := r.URL.Query()
+	classes := filters["class"]
+	specs := filters["spec"]
+
+	limit, err := strconv.Atoi(filters.Get("limit"))
+	if err != nil || limit < 25 {
+		limit = 25
+	}
+
+	offset, err := strconv.Atoi(filters.Get("offset"))
+	if err != nil || offset < 0 {
+		offset = 0
+	}
+
+	leaderboard, err := app.leaderboard.FetchAllByBracket(pvpBracket, classes, specs, limit, offset)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.render(w, r, "leaderboard.page.tmpl", &templateData{
+		Leaderboard: leaderboard,
+	})
+}
+
 func (app *application) getLeaderboardByBracket(w http.ResponseWriter, r *http.Request) {
 	pvpBracket := mux.Vars(r)["bracket"]
 
