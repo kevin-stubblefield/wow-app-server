@@ -1,0 +1,42 @@
+{{template "base" .}}
+
+{{define "title"}}
+	{{if .Character}}
+		{{.Character.Name}}
+	{{else}}
+		Nobody
+	{{end}}
+{{end}}
+
+{{define "main"}}
+	{{with .Character}}
+		<h2>{{.Name}}</h2>
+		<h3>{{.Realm}}</h3>
+		<div class="equipment-container">
+			<section class="equipment">
+				{{range $.Slots}}
+					{{with findEquipmentForSlot $.Character.Equipped .}}
+						<div>
+							{{if gt .ID 0}}
+								<span>{{ .ItemSlot }}: <a href="{{wowheadLink .}}" data-wh-rename-link="true" data-wh-icon-size="small"></a></span>
+							{{end}}
+						</div>
+					{{end}}
+				{{else}}
+					<p>No data for this character</p>
+				{{end}}
+			</section>
+
+			<!--<section class="equipment grid">
+				<div class="item" :class="{ main: slot === 'Main Hand', off: slot === 'Off Hand', 'col-3': i > 7 && slot !== 'Off Hand' && slot !== 'Main Hand' }" v-for="(slot, i) in slots" :key="slot">
+					<span><a :href="`https://www.wowhead.com/item=${findEquipmentBySlot(slot).id}`" :data-wowhead="`bonus=${findEquipmentBySlot(slot).bonuses}`"></a></span>
+				</div>
+				<div v-if="character.media" class="character">
+					<img :src="character.media.assets[3].value" />
+				</div>
+			</section>-->
+		</div>
+	{{else}}
+		<p>There's nobody here</p>
+	{{end}}
+{{end}}

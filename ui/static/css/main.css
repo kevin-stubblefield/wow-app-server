@@ -96,7 +96,9 @@
 }
 
 .entry.header {
+	padding: 1rem;
 	border-bottom: none;
+	background-color: var(--primary-bg);
 	position: -webkit-sticky;
 	position: sticky;
 	top: 0;

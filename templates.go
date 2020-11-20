@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"path/filepath"
 	"strings"
@@ -13,7 +14,8 @@ type templateData struct {
 	CurrentYear int
 	Flash       string
 	Leaderboard []models.LeaderboardEntry
-	Character   []models.Character
+	Character   models.Character
+	Slots       []string
 }
 
 func classSlug(class string) string {
@@ -21,8 +23,23 @@ func classSlug(class string) string {
 	return strings.Join(strs, "-")
 }
 
+func wowheadLink(e models.Equipment) string {
+	return fmt.Sprintf("https://www.wowhead.com/item=%d?bonus=%s", e.ItemID, e.Bonuses)
+}
+
+func findEquipmentForSlot(equipped []models.Equipment, slot string) models.Equipment {
+	for _, item := range equipped {
+		if item.ItemSlot == slot {
+			return item
+		}
+	}
+	return models.Equipment{}
+}
+
 var functions = template.FuncMap{
-	"classSlug": classSlug,
+	"classSlug":            classSlug,
+	"wowheadLink":          wowheadLink,
+	"findEquipmentForSlot": findEquipmentForSlot,
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {

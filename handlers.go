@@ -40,6 +40,24 @@ func (app *application) showLeaderboard(w http.ResponseWriter, r *http.Request) 
 	})
 }
 
+func (app *application) showCharacter(w http.ResponseWriter, r *http.Request) {
+	realmSlug := mux.Vars(r)["realmSlug"]
+	characterName := mux.Vars(r)["character"]
+
+	character, err := app.character.Fetch(realmSlug, characterName)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	slots := []string{"Head", "Neck", "Shoulders", "Back", "Chest", "Shirt", "Tabard", "Wrist", "Hands", "Waist", "Legs", "Feet", "Ring 1", "Ring 2", "Trinket 1", "Trinket 2", "Main Hand", "Off Hand"}
+
+	app.render(w, r, "character.page.tmpl", &templateData{
+		Character: *character,
+		Slots:     slots,
+	})
+}
+
 func (app *application) getLeaderboardByBracket(w http.ResponseWriter, r *http.Request) {
 	pvpBracket := mux.Vars(r)["bracket"]
 
