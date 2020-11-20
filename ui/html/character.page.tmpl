@@ -16,11 +16,11 @@
 			<section class="equipment">
 				{{range $.Slots}}
 					{{with findEquipmentForSlot $.Character.Equipped .}}
-						<div>
-							{{if gt .ID 0}}
+						{{if gt .ID 0}}
+							<div>
 								<span>{{ .ItemSlot }}: <a href="{{wowheadLink .}}" data-wh-rename-link="true" data-wh-icon-size="small"></a></span>
-							{{end}}
-						</div>
+							</div>
+						{{end}}
 					{{end}}
 				{{else}}
 					<p>No data for this character</p>
