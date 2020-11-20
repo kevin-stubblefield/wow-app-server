@@ -11,15 +11,13 @@
                 <div class="name">Name</div>
                 <div class="faction">Faction</div>
                 <div class="race">Race</div>
-                <!--<div class="class">Class</div>-->
                 <div class="spec">Spec</div>
-                <!--<div class="played">Played</div>-->
                 <div class="won">Won</div>
                 <div class="lost">Lost</div>
             </li>
 			{{range .Leaderboard}}
 			<li class="entry">
-				<a href="/character/{{ .CharacterRealmSlug }}/{{ .CharacterName }}">
+				<a class="{{ classSlug .CharacterClass }}" href="/character/{{ .CharacterRealmSlug }}/{{ .CharacterName }}">
 					<div class="rank">{{ .Rank }}</div>
 					<div class="rating">{{ .Rating }}</div>
 					<div class="name">{{ .CharacterName }}</div>

@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"path/filepath"
+	"strings"
 
 	"stubblefield.io/wow-leaderboard-api/models"
 )
@@ -13,6 +14,15 @@ type templateData struct {
 	Flash       string
 	Leaderboard []models.LeaderboardEntry
 	Character   []models.Character
+}
+
+func classSlug(class string) string {
+	strs := strings.Split(strings.ToLower(class), " ")
+	return strings.Join(strs, "-")
+}
+
+var functions = template.FuncMap{
+	"classSlug": classSlug,
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {
@@ -26,7 +36,7 @@ func newTemplateCache(dir string) (map[string]*template.Template, error) {
 	for _, page := range pages {
 		name := filepath.Base(page)
 
-		ts, err := template.New(name).ParseFiles(page)
+		ts, err := template.New(name).Funcs(functions).ParseFiles(page)
 		if err != nil {
 			return nil, err
 		}

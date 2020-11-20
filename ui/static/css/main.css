@@ -68,24 +68,31 @@
 	cursor: pointer;
 }
 
+.header {
+	display: flex;
+}
+
+.header div {
+	flex: 1;
+}
+
 .header ~ li.entry:hover {
 	background-color: var(--row-hover);
 }
 
 .entry {
-	padding: 1rem;
 	border-bottom: 1px solid #ddd;
+	background-color: var(white);
+}
+
+.entry > a {
 	display: flex;
-	background-color: var(--primary-bg);
-}
-
-.entry > div {
-	flex: 1;
-}
-
-a {
-	color: var(--primary-font);
+	padding: 1rem;
 	text-decoration: none;
+}
+
+.entry > a div {
+	flex: 1;
 }
 
 .entry.header {
