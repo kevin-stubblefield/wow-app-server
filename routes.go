@@ -10,6 +10,7 @@ import (
 
 func (app *application) routes() http.Handler {
 	r := mux.NewRouter()
+	r.HandleFunc("/", app.showDashboard)
 	r.HandleFunc("/leaderboard/{bracket:(?:2v2|3v3|rbg)}", app.showLeaderboard)
 	r.HandleFunc("/character/{realmSlug:[a-z-]+}/{character:[A-Za-z]+}", app.showCharacter)
 	r.HandleFunc("/specs", app.getSpecs)

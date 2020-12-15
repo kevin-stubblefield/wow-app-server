@@ -58,6 +58,10 @@ func (app *application) showCharacter(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func (app *application) showDashboard(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "dashboard.page.tmpl", &templateData{})
+}
+
 func (app *application) getLeaderboardByBracket(w http.ResponseWriter, r *http.Request) {
 	pvpBracket := mux.Vars(r)["bracket"]
 
