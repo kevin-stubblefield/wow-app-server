@@ -21,7 +21,7 @@ func (app *application) showLeaderboard(w http.ResponseWriter, r *http.Request) 
 
 	limit, err := strconv.Atoi(filters.Get("limit"))
 	if err != nil || limit < 25 {
-		limit = 25
+		limit = 9999
 	}
 
 	offset, err := strconv.Atoi(filters.Get("offset"))
