@@ -17,7 +17,7 @@
             </li>
 			{{range .Leaderboard}}
 			<li class="entry">
-				<a class="{{ classSlug .CharacterClass }}" href="/character/{{ .CharacterRealmSlug }}/{{ .CharacterName }}">
+				<a class="{{ classSlug .CharacterClass }} flex row bottom-border" href="/character/{{ .CharacterRealmSlug }}/{{ .CharacterName }}">
 					<div class="rank">{{ .Rank }}</div>
 					<div class="rating">{{ .Rating }}</div>
 					<div class="name">{{ .CharacterName }}</div>

@@ -45,11 +45,12 @@ func (store *PvpLeaderboardStore) FetchAllByBracket(pvpBracket string, classes, 
 	return populatePvpLeaderboard(rows)
 }
 
+// GetClassAndSpecBreakdown gets the class/spec breakdown for a bracket
 func (store *PvpLeaderboardStore) GetClassAndSpecBreakdown(bracket string) ([]models.ClassAndSpecBreakdown, error) {
-	query := "select l.character_class, l.character_spec, count(*) as spec_count, 1.0 * count(*) / (select count(*) from leaderboard where bracket = ?) * 100 as percent "
-	query += "from leaderboard l "
-	query += "where bracket = ? and l.character_class  <> '' and l.character_spec <> '' "
-	query += "group by l.character_class, l.character_spec"
+	query := `select l.character_class, l.character_spec, count(*) as spec_count, 1.0 * count(*) / (select count(*) from leaderboard where bracket = ?) * 100 as percent 
+	from leaderboard l 
+	where bracket = ? and l.character_class  <> '' and l.character_spec <> '' 
+	group by l.character_class, l.character_spec`
 
 	rows, err := store.DB.Query(query, bracket, bracket)
 	if err != nil {

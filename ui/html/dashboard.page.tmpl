@@ -2,18 +2,65 @@
 
 {{define "title"}}Dashboard{{end}}
 
+{{define "stylesheets"}}<link href="/static/css/dashboard.css" rel="stylesheet">{{end}}
+{{define "scripts"}}<script type="text/javascript" src="/static/js/dashboard.js"></script>{{end}}
+
 {{define "main"}}
-<h2>2v2</h2>
-<ul class="leaderboard">
+<h2 class="expander">2v2 <span>+</span></h2>
+<ul id="2v2-breakdown" class="breakdown hidden">
+	<li class="entry header">
+		<div>Class</div>
+		<div>Spec</div>
+		<div>Count</div>
+		<div>Percent</div>
+	</li>
 	{{range .Breakdown2s}}
-		<li class="entry {{ classSlug .Class }}">
-			<div>{{.Class}}</div>
-			<div>{{.Spec}}</div>
-			<div>{{.SpecCount}}</div>
-			<div>{{.Percent}}</div>
+		<li class="entry">
+			<div class="{{ classSlug .Class }} flex row">
+				<div>{{.Class}}</div>
+				<div>{{.Spec}}</div>
+				<div>{{.SpecCount}}</div>
+				<div>{{formatFloat .Percent 2}}%</div>
+			</div>
 		</li>
 	{{end}}
 </ul>
-<h2>3v3</h2>
-<h2>RBG</h2>
+<h2 class="expander">3v3 <span>+</span></h2>
+<ul id="3v3-breakdown" class="breakdown hidden">
+	<li class="entry header">
+		<div>Class</div>
+		<div>Spec</div>
+		<div>Count</div>
+		<div>Percent</div>
+	</li>
+	{{range .Breakdown3s}}
+		<li class="entry">
+			<div class="{{ classSlug .Class }} flex row">
+				<div>{{.Class}}</div>
+				<div>{{.Spec}}</div>
+				<div>{{.SpecCount}}</div>
+				<div>{{formatFloat .Percent 2}}%</div>
+			</div>
+		</li>
+	{{end}}
+</ul>
+<h2 class="expander">RBG <span>+</span></h2>
+<ul id="rbg-breakdown" class="breakdown hidden">
+	<li class="entry header">
+		<div>Class</div>
+		<div>Spec</div>
+		<div>Count</div>
+		<div>Percent</div>
+	</li>
+	{{range .BreakdownRBGs}}
+		<li class="entry">
+			<div class="{{ classSlug .Class }} flex row">
+				<div>{{.Class}}</div>
+				<div>{{.Spec}}</div>
+				<div>{{.SpecCount}}</div>
+				<div>{{formatFloat .Percent 2}}%</div>
+			</div>
+		</li>
+	{{end}}
+</ul>
 {{end}}

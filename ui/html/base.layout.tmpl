@@ -10,6 +10,7 @@
     <meta http-equiv="Expires" content="0" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700&display=swap" rel="stylesheet">
     <link href="/static/css/main.css" rel="stylesheet">
+    {{template "stylesheets" .}}
     <script src="/static/js/wowhead.js" type="text/javascript"></script>
     <script src="https://wow.zamimg.com/widgets/power.js"></script>
     <title>{{template "title" .}}</title>
@@ -19,6 +20,9 @@
         {{ template "main" .}}
     </main>
     {{template "footer" .}}
+    {{template "scripts" .}}
 </body>
 </html>
 {{ end }}
+{{define "stylesheets"}}{{end}}
+{{define "scripts"}}{{end}}

@@ -40,10 +40,15 @@ func findEquipmentForSlot(equipped []models.Equipment, slot string) models.Equip
 	return models.Equipment{}
 }
 
+func formatFloat(f float32, precision int) string {
+	return fmt.Sprintf("%.*f", precision, f)
+}
+
 var functions = template.FuncMap{
 	"classSlug":            classSlug,
 	"wowheadLink":          wowheadLink,
 	"findEquipmentForSlot": findEquipmentForSlot,
+	"formatFloat":          formatFloat,
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {
