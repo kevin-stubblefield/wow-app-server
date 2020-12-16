@@ -59,7 +59,29 @@ func (app *application) showCharacter(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) showDashboard(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "dashboard.page.tmpl", &templateData{})
+	breakdown2s, err := app.leaderboard.GetClassAndSpecBreakdown("2v2")
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	breakdown3s, err := app.leaderboard.GetClassAndSpecBreakdown("3v3")
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	breakdownRBGs, err := app.leaderboard.GetClassAndSpecBreakdown("rbg")
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.render(w, r, "dashboard.page.tmpl", &templateData{
+		Breakdown2s:   breakdown2s,
+		Breakdown3s:   breakdown3s,
+		BreakdownRBGs: breakdownRBGs,
+	})
 }
 
 func (app *application) getLeaderboardByBracket(w http.ResponseWriter, r *http.Request) {

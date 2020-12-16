@@ -16,6 +16,10 @@ type templateData struct {
 	Leaderboard []models.LeaderboardEntry
 	Character   models.Character
 	Slots       []string
+
+	Breakdown2s   []models.ClassAndSpecBreakdown
+	Breakdown3s   []models.ClassAndSpecBreakdown
+	BreakdownRBGs []models.ClassAndSpecBreakdown
 }
 
 func classSlug(class string) string {

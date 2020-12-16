@@ -45,6 +45,20 @@ func (store *PvpLeaderboardStore) FetchAllByBracket(pvpBracket string, classes, 
 	return populatePvpLeaderboard(rows)
 }
 
+func (store *PvpLeaderboardStore) GetClassAndSpecBreakdown(bracket string) ([]models.ClassAndSpecBreakdown, error) {
+	query := "select l.character_class, l.character_spec, count(*) as spec_count, 1.0 * count(*) / (select count(*) from leaderboard where bracket = ?) * 100 as percent "
+	query += "from leaderboard l "
+	query += "where bracket = ? and l.character_class  <> '' and l.character_spec <> '' "
+	query += "group by l.character_class, l.character_spec"
+
+	rows, err := store.DB.Query(query, bracket, bracket)
+	if err != nil {
+		return nil, err
+	}
+
+	return populateSpecBreakdown(rows)
+}
+
 func (store *PvpLeaderboardStore) getSpecsForClasses(classes []string) ([]string, error) {
 	query, args, err := sqlx.In("SELECT spec FROM specializations WHERE class IN (?)", classes)
 	if err != nil {
@@ -103,4 +117,26 @@ func populatePvpLeaderboard(rows *sql.Rows) ([]models.LeaderboardEntry, error) {
 	}
 
 	return leaderboard, nil
+}
+
+func populateSpecBreakdown(rows *sql.Rows) ([]models.ClassAndSpecBreakdown, error) {
+	var breakdown []models.ClassAndSpecBreakdown
+
+	for rows.Next() {
+		var b models.ClassAndSpecBreakdown
+
+		err := rows.Scan(
+			&b.Class,
+			&b.Spec,
+			&b.SpecCount,
+			&b.Percent,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		breakdown = append(breakdown, b)
+	}
+
+	return breakdown, nil
 }

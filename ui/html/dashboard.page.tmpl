@@ -3,5 +3,17 @@
 {{define "title"}}Dashboard{{end}}
 
 {{define "main"}}
-<h2>Hello</h2>
+<h2>2v2</h2>
+<ul class="leaderboard">
+	{{range .Breakdown2s}}
+		<li class="entry {{ classSlug .Class }}">
+			<div>{{.Class}}</div>
+			<div>{{.Spec}}</div>
+			<div>{{.SpecCount}}</div>
+			<div>{{.Percent}}</div>
+		</li>
+	{{end}}
+</ul>
+<h2>3v3</h2>
+<h2>RBG</h2>
 {{end}}

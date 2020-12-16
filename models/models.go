@@ -48,3 +48,11 @@ type Equipment struct {
 	ItemName           string `json:"name"`
 	Bonuses            string `json:"bonuses"`
 }
+
+// ClassAndSpecBreakdown holds representation data for each class and spec
+type ClassAndSpecBreakdown struct {
+	Class     string  `json:"class"`
+	Spec      string  `json:"spec"`
+	SpecCount int     `json:"spec_count"`
+	Percent   float32 `json:"percent"`
+}
