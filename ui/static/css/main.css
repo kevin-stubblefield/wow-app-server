@@ -24,6 +24,11 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	color: var(--primary-font);
 }
+
+h1,
+h2 {
+	font-weight: 400;
+}
   
 .container {
 	max-width: 1100px;
@@ -142,6 +147,32 @@ a.flex:hover {
 	border-color: var(--select-hover);
 }
 
+/* Header and Nav */
+header.container {
+	padding: 1.5rem 0;
+}
+
+nav a {
+	padding: 8px;
+	margin-left: 2rem;
+	text-decoration: none;
+	color: var(--primary-font);
+	border-radius: 2px;
+}
+
+nav a:visited {
+	color: var(--primary-font);
+}
+
+nav a:hover {
+	background-color: var(--row-hover);
+}
+
+/* Footer */
+footer {
+	margin-top: 2rem;
+}
+
 /* Utilities */
 .hidden {
 	display: none;
@@ -149,6 +180,10 @@ a.flex:hover {
 
 .bottom-border {
 	border-bottom: 1px solid #ddd;
+}
+
+.sb {
+	justify-content: space-between;
 }
 
 /* Class Colors */
