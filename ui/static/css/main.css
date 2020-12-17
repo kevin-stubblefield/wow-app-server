@@ -156,6 +156,10 @@ a.flex:hover {
 }
 
 /* Header and Nav */
+.logo {
+	color: gold;
+}
+
 header.container {
 	padding: 1.5rem 0;
 }
