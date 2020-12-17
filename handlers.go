@@ -37,6 +37,8 @@ func (app *application) showLeaderboard(w http.ResponseWriter, r *http.Request) 
 
 	app.render(w, r, "leaderboard.page.tmpl", &templateData{
 		Leaderboard: leaderboard,
+		Limit:       limit,
+		Offset:      offset + limit,
 	})
 }
 

@@ -5,6 +5,7 @@
 {{define "scripts"}}<script src="/static/js/leaderboard.js" type="text/javascript"></script>{{end}}
 
 {{define "main"}}
+	<div id="to-top" class="to-top hidden"><p>Back To Top</p></div>
 	<select class="select" id="bracket-select">
 		<option selected disabled hidden>Choose Bracket</option>
 		<option value="2v2">2v2 Arenas</option>
@@ -13,6 +14,12 @@
 	</select>
 	{{if .Leaderboard}}
 		<h1 class="mt">{{(index .Leaderboard 0).Bracket}}</h1>
+		<div class="pagination">
+			{{if gt .Offset .Limit}}
+				<a href="/leaderboard/{{(index .Leaderboard 0).Bracket}}?limit={{.Limit}}&offset={{previousPage .Limit .Offset}}">< Last</a>
+			{{end}}
+			<a href="/leaderboard/{{(index .Leaderboard 0).Bracket}}?limit={{.Limit}}&offset={{.Offset}}">Next ></a>
+		</div>
 		<ul class="leaderboard">
             <li class="entry header">
                 <div class="rank">Rank</div>
@@ -39,6 +46,12 @@
 			</li>
 			{{end}}
         </ul>
+		<div class="pagination">
+			{{if gt .Offset .Limit}}
+				<a href="/leaderboard/{{(index .Leaderboard 0).Bracket}}?limit={{.Limit}}&offset={{previousPage .Limit .Offset}}">< Last</a>
+			{{end}}
+			<a href="/leaderboard/{{(index .Leaderboard 0).Bracket}}?limit={{.Limit}}&offset={{.Offset}}">Next ></a>
+		</div>
 	{{else}}
 		<p>There's no data</p>
 	{{end}}

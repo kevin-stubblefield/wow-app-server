@@ -13,6 +13,8 @@ type templateData struct {
 	CSRFToken   string
 	CurrentYear int
 	Flash       string
+	Limit       int
+	Offset      int
 	Leaderboard []models.LeaderboardEntry
 	Character   models.Character
 	Slots       []string
@@ -44,11 +46,20 @@ func formatFloat(f float32, precision int) string {
 	return fmt.Sprintf("%.*f", precision, f)
 }
 
+func previousPage(limit, offset int) int {
+	result := offset - limit - limit
+	if result < 0 {
+		result = 0
+	}
+	return result
+}
+
 var functions = template.FuncMap{
 	"classSlug":            classSlug,
 	"wowheadLink":          wowheadLink,
 	"findEquipmentForSlot": findEquipmentForSlot,
 	"formatFloat":          formatFloat,
+	"previousPage":         previousPage,
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {
