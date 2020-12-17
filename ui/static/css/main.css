@@ -182,6 +182,10 @@ footer {
 	border-bottom: 1px solid #ddd;
 }
 
+.mt {
+	margin-top: 1.25rem;
+}
+
 .sb {
 	justify-content: space-between;
 }
